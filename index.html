@@ -159,7 +159,7 @@
     // 3) 透過 JSONP 向 Apps Script 要折扣碼
     function requestCode() {
       const deviceId = encodeURIComponent(getOrCreateDeviceId());
-      const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQN3giIvyIbeS0EIawWVznlqXZ/exec';
+      const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQGN3giIvyIbeS0EIawWVznlqXZ/exec';
       const joinChar = BASE_URL.includes('?') ? '&' : '?';
 
       const script = document.createElement('script');
@@ -183,4 +183,5 @@
   </script>
 </body>
 </html>
+
 
