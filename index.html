@@ -321,7 +321,10 @@
     </div>
   </div>
 
-  <script>
+    <script>
+    // === 設定：統一管理 Web App URL ===
+    const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQN3giIvyIbeS0EIawWVznlqXZ/exec';
+
     // 產生 / 取得裝置 ID（存在 localStorage）
     function getOrCreateDeviceId() {
       const key = 'whitecoat_device_id_v1';
@@ -384,7 +387,6 @@
             await navigator.clipboard.writeText(code);
             success = true;
           } else {
-            // 後備方案
             const tempInput = document.createElement('input');
             tempInput.value = code;
             document.body.appendChild(tempInput);
@@ -410,18 +412,19 @@
       };
     }
 
-    // 透過 JSONP 向 Apps Script 要折扣碼
+    // 透過 JSONP 向 Apps Script 要折扣碼（加上時間戳，避免奇怪快取）
     function requestCode() {
       const deviceId = encodeURIComponent(getOrCreateDeviceId());
-      const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQN3giIvyIbeS0EIawWVznlqXZ/exec';
       const joinChar = BASE_URL.includes('?') ? '&' : '?';
+      const ts = Date.now(); // cache-buster
 
       const script = document.createElement('script');
       script.src =
         BASE_URL +
         joinChar +
         'action=claim&deviceId=' + deviceId +
-        '&callback=handleClaim';
+        '&callback=handleClaim' +
+        '&ts=' + ts;
 
       script.onerror = function () {
         document.getElementById('loading').style.display = 'none';
