@@ -321,7 +321,7 @@
     </div>
   </div>
 
-  <script>
+   <script>
     // === 設定：統一管理 Web App URL ===
     const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQN3giIvyIbeS0EIawWVznlqXZ/exec';
 
@@ -340,8 +340,8 @@
       }
     }
 
-    // JSONP callback：Apps Script 會呼叫這個函式
-    function handleClaim(res) {
+    // ✅ Apps Script 回傳的是 handle({...})，所以這裡要叫 handle
+    function handle(res) {
       document.getElementById('loading').style.display = 'none';
 
       if (!res || res.status === 'empty') {
@@ -412,19 +412,18 @@
       };
     }
 
-    // 透過 JSONP 向 Apps Script 要折扣碼（加上時間戳，避免奇怪快取）
+    // 透過 JSONP 向 Apps Script 要折扣碼
     function requestCode() {
       const deviceId = encodeURIComponent(getOrCreateDeviceId());
-      const joinChar = BASE_URL.includes('?') ? '&' : '?';
-      const ts = Date.now(); // cache-buster
 
+      // 🔥 這裡做成跟你測試時一模一樣：
+      // https://script.google.com/macros/s/.../exec?action=claim&deviceId=testFromGithub&callback=handle
       const script = document.createElement('script');
       script.src =
         BASE_URL +
-        joinChar +
-        'action=claim&deviceId=' + deviceId +
-        '&callback=handleClaim' +
-        '&ts=' + ts;
+        '?action=claim' +
+        '&deviceId=' + deviceId +
+        '&callback=handle';
 
       script.onerror = function () {
         document.getElementById('loading').style.display = 'none';
@@ -440,3 +439,4 @@
   </script>
 </body>
 </html>
+
