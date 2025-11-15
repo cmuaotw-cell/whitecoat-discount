@@ -2,59 +2,73 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>折扣碼領取</title>
+  <title>白袍之友專屬折扣碼</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: #f3f4f6;
+      overflow: hidden; /* 不捲動 */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
     }
     .wrap {
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
-      box-sizing: border-box;
     }
     .card {
       background: #ffffff;
-      border-radius: 12px;
-      padding: 20px 18px;
+      border-radius: 16px;
+      padding: 24px 20px 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
       max-width: 360px;
-      width: 100%;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      width: 90%;
       text-align: center;
-      box-sizing: border-box;
     }
-    h1 {
-      font-size: 18px;
-      margin: 0 0 8px;
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
-    p {
-      margin: 4px 0;
+    .subtitle {
       font-size: 14px;
-      color: #4b5563;
+      color: #666;
+      margin-bottom: 16px;
     }
     .code {
-      margin: 12px 0;
-      padding: 8px 12px;
-      border-radius: 8px;
-      background: #111827;
-      color: #f9fafb;
-      font-weight: bold;
-      letter-spacing: 0.16em;
-      font-size: 18px;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #f0f4ff;
+      display: inline-block;
+      margin-bottom: 12px;
     }
-    .small {
+    .status {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    .note {
       font-size: 12px;
-      color: #6b7280;
+      color: #999;
     }
+    .spinner {
+      border: 4px solid #eee;
+      border-top: 4px solid #4c6fff;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
     .error {
-      color: #b91c1c;
+      color: #c00;
       font-size: 14px;
       margin-top: 8px;
     }
@@ -63,30 +77,36 @@
 <body>
   <div class="wrap">
     <div class="card">
+      <!-- 載入中 -->
       <div id="loading">
-        <h1>正在為您領取折扣碼…</h1>
-        <p class="small">請稍候數秒。</p>
+        <div class="spinner"></div>
+        <div class="subtitle">正在為您領取專屬折扣碼…</div>
       </div>
 
+      <!-- 結果 -->
       <div id="result" style="display:none;">
-        <h1>您的折扣碼</h1>
-        <div id="code" class="code">--------</div>
-        <p id="statusText"></p>
-        <p class="small">請記得截圖保存此畫面。</p>
+        <div class="title">白袍之友專屬折扣碼</div>
+        <div class="subtitle" id="subtitle"></div>
+        <div class="code" id="code"></div>
+        <div class="status" id="statusText"></div>
+        <div class="note">
+          每台裝置限領一次，請截圖或記下此折扣碼。
+        </div>
       </div>
 
+      <!-- 錯誤 -->
       <div id="error" style="display:none;">
-        <h1>暫時無法領取折扣碼</h1>
-        <p id="errorText" class="error"></p>
-        <p class="small">若持續發生，請洽現場工作人員協助。</p>
+        <div class="title">暫時無法領取折扣碼</div>
+        <div class="error" id="errorText"></div>
+        <div class="note">
+          若持續發生，請洽現場工作人員或主辦單位協助。
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // 把這裡換成你部署出來的 Web App /exec URL
-    const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQGN3giIvyIbeS0EIawWVznlqXZ/exec';
-
+    // 1) 產生 / 取得裝置 ID（存在 localStorage）
     function getOrCreateDeviceId() {
       const key = 'whitecoat_device_id_v1';
       try {
@@ -97,60 +117,63 @@
         }
         return id;
       } catch (e) {
-        // 如果 localStorage 不能用，就臨時產生一個
+        // 如果 localStorage 被關閉，就每次給新的（後端仍會防止重複）
         return 'dev-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
       }
     }
 
-    // 這個函式會被 Apps Script 用 JSONP 呼叫：handle({...})
-    function handle(res) {
+    // 2) JSONP callback：Apps Script 會呼叫這個函式
+    function handleClaim(res) {
       document.getElementById('loading').style.display = 'none';
 
-      if (!res) {
-        showError('發生未知錯誤，請稍後再試。');
-        return;
-      }
-
-      if (res.status === 'empty') {
-        showError('折扣碼已全數發放完畢，感謝您的支持。');
+      if (!res || res.status === 'empty') {
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('errorText').textContent =
+          '折扣碼已全數發放完畢，感謝您的熱情支持。';
         return;
       }
 
       if (res.status === 'error') {
-        showError(res.message || '系統錯誤，請稍後再試。');
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('errorText').textContent = '系統錯誤：' + res.message;
         return;
       }
 
       if (res.status !== 'ok') {
-        showError('系統發生未知錯誤，請稍後再試。');
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('errorText').textContent =
+          '系統發生未知錯誤，請稍後再試。';
         return;
       }
 
-      // 成功
-      const codeEl = document.getElementById('code');
-      const statusEl = document.getElementById('statusText');
-      codeEl.textContent = res.code || '--------';
-      statusEl.textContent = res.reused
-        ? ('您先前已領取過折扣碼（第 ' + res.index + ' 位）。')
-        : ('您是第 ' + res.index + ' 位領取折扣碼的朋友！');
-
       document.getElementById('result').style.display = 'block';
+      document.getElementById('code').textContent = res.code;
+      document.getElementById('subtitle').textContent =
+        '感謝您支持台灣白袍管樂團與公益活動。';
+      document.getElementById('statusText').textContent =
+        res.reused
+          ? ('您先前已領取過折扣碼，這是您的專屬代碼（第 ' + res.index + ' 位）。')
+          : ('您是第 ' + res.index + ' 位領取折扣碼的朋友！');
     }
 
-    function showError(msg) {
-      document.getElementById('errorText').textContent = msg;
-      document.getElementById('error').style.display = 'block';
-    }
-
+    // 3) 透過 JSONP 向 Apps Script 要折扣碼
     function requestCode() {
       const deviceId = encodeURIComponent(getOrCreateDeviceId());
-      const script = document.createElement('script');
-      // 這裡只帶 deviceId 和 callback=handle，後端統一走 claimCode_
-      script.src = BASE_URL + '?deviceId=' + deviceId + '&callback=handle';
+      const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQN3giIvyIbeS0EIawWVznlqXZ/exec';
+      const joinChar = BASE_URL.includes('?') ? '&' : '?';
 
-      script.onerror = function () {
+      const script = document.createElement('script');
+      script.src =
+        BASE_URL +
+        joinChar +
+        'action=claim&deviceId=' + deviceId +
+        '&callback=handleClaim';
+
+      script.onerror = function() {
         document.getElementById('loading').style.display = 'none';
-        showError('無法連線至伺服器，請稍後再試。');
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('errorText').textContent =
+          '無法連線至伺服器，請稍後再試。';
       };
 
       document.body.appendChild(script);
