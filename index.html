@@ -2,32 +2,16 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>白袍之友專屬折扣碼</title>
+  <title>折扣碼領取</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
-      --bg-gradient-start: #050816;
-      --bg-gradient-end: #111827;
-      --card-bg: #0b1020;
-      --accent: #f5c15b;
-      --accent-soft: rgba(245, 193, 91, 0.15);
-      --text-main: #f9fafb;
-      --text-sub: #9ca3af;
-      --text-muted: #6b7280;
-      --danger: #fca5a5;
-      --primary: #38bdf8;
-    }
-
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, var(--bg-gradient-start) 0, var(--bg-gradient-end) 45%, #020617 100%);
-      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: #f3f4f6;
     }
-
     .wrap {
       height: 100%;
       display: flex;
@@ -36,296 +20,73 @@
       padding: 16px;
       box-sizing: border-box;
     }
-
     .card {
-      position: relative;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.15), transparent 55%),
-                  radial-gradient(circle at bottom right, rgba(245,158,11,0.15), transparent 55%),
-                  var(--card-bg);
-      border-radius: 20px;
-      padding: 20px 18px 18px;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.45);
-      max-width: 380px;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px 18px;
+      max-width: 360px;
       width: 100%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
       text-align: center;
-      border: 1px solid rgba(148,163,184,0.35);
       box-sizing: border-box;
     }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: 22px;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(56,189,248,0.7), rgba(245,158,11,0.7));
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0.6;
-      pointer-events: none;
+    h1 {
+      font-size: 18px;
+      margin: 0 0 8px;
     }
-
-    .logo-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .logo-circle {
-      width: 56px;
-      height: 56px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, rgba(248,250,252,0.25), transparent 55%);
-      border: 1px solid rgba(148,163,184,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .logo-circle img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      color: var(--accent);
-      background: rgba(15,118,110,0.15);
-      border: 1px solid rgba(45,212,191,0.4);
-      margin-bottom: 6px;
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34,197,94,0.35);
-    }
-
-    .title {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: var(--text-sub);
-      margin-bottom: 16px;
-    }
-
-    .code-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .code-box {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.25), transparent 60%), rgba(15,23,42,0.9);
-      border: 1px solid rgba(56,189,248,0.6);
-      margin-bottom: 8px;
-      min-width: 220px;
-    }
-
-    .code {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .copy-btn {
-      font-size: 11px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.7);
-      color: var(--text-sub);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .copy-btn span.icon {
-      font-size: 12px;
-    }
-
-    .copy-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(15,23,42,0.95);
-    }
-
-    .copy-btn.copied {
-      border-color: #22c55e;
-      color: #22c55e;
-    }
-
-    .status {
-      font-size: 12px;
-      color: var(--text-sub);
-      margin-bottom: 4px;
-    }
-
-    .screenshot-alert {
-      font-size: 12px;
-      color: var(--accent);
-      margin-bottom: 10px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(245, 193, 91, 0.1);
-      border: 1px dashed rgba(245, 193, 91, 0.6);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .screenshot-alert .icon {
+    p {
+      margin: 4px 0;
       font-size: 14px;
+      color: #4b5563;
     }
-
-    .note-block {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed rgba(75,85,99,0.7);
+    .code {
+      margin: 12px 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #111827;
+      color: #f9fafb;
+      font-weight: bold;
+      letter-spacing: 0.16em;
+      font-size: 18px;
     }
-
-    .note-title {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .small {
+      font-size: 12px;
+      color: #6b7280;
     }
-
-    .note {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-
-    .note span.bullet {
-      color: rgba(148,163,184,0.9);
-      margin-right: 2px;
-    }
-
-    .spinner {
-      border: 3px solid rgba(30,64,175,0.3);
-      border-top: 3px solid var(--accent);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 10px;
-    }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    .loading-text {
-      font-size: 13px;
-      color: var(--text-sub);
-    }
-
     .error {
-      color: var(--danger);
-      font-size: 13px;
-      margin-top: 6px;
+      color: #b91c1c;
+      font-size: 14px;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <!-- Logo -->
-      <div class="logo-wrap">
-        <div class="logo-circle">
-          <img src="https://drive.google.com/uc?export=view&id=1blFheoP_xUQODwFCrrpS8E-6ci7P7s7d" alt="台灣白袍管樂團 Logo">
-        </div>
-      </div>
-
-      <!-- Badge -->
-      <div class="badge">
-        <span class="badge-dot"></span>
-        白袍之友｜現場限定
-      </div>
-
-      <!-- 載入中 -->
       <div id="loading">
-        <div class="title">白袍之友專屬折扣碼</div>
-        <div class="subtitle">感謝您支持台灣白袍管樂團與公益活動。</div>
-        <div class="spinner"></div>
-        <div class="loading-text">正在為您領取專屬折扣碼…</div>
+        <h1>正在為您領取折扣碼…</h1>
+        <p class="small">請稍候數秒。</p>
       </div>
 
-      <!-- 結果 -->
       <div id="result" style="display:none;">
-        <div class="title">白袍之友專屬折扣碼</div>
-        <div class="subtitle">感謝您支持台灣白袍管樂團與公益活動。</div>
-
-        <div class="code-label">您的專屬代碼</div>
-        <div class="code-box">
-          <div class="code" id="code">--------</div>
-          <button class="copy-btn" id="copyBtn" type="button">
-            <span class="icon">📋</span>
-            <span id="copyText">複製</span>
-          </button>
-        </div>
-
-        <div class="status" id="statusText"></div>
-
-        <div class="screenshot-alert">
-          <span class="icon">📸</span>
-          <span>請立即截圖保存此畫面，以免遺失折扣碼。</span>
-        </div>
-
-        <div class="note-block">
-          <div class="note-title">注意事項</div>
-          <div class="note">
-            <div><span class="bullet">•</span>本折扣碼限 2026/7 白袍管演出檔次使用。</div>
-            <div><span class="bullet">•</span>每台裝置限領一次，不可轉讓。</div>
-            <div><span class="bullet">•</span>如有疑問請洽現場服務台。</div>
-          </div>
-        </div>
+        <h1>您的折扣碼</h1>
+        <div id="code" class="code">--------</div>
+        <p id="statusText"></p>
+        <p class="small">請記得截圖保存此畫面。</p>
       </div>
 
-      <!-- 錯誤 -->
       <div id="error" style="display:none;">
-        <div class="title">暫時無法領取折扣碼</div>
-        <div class="error" id="errorText"></div>
-        <div class="note">
-          若持續發生，請洽現場工作人員或主辦單位協助。
-        </div>
+        <h1>暫時無法領取折扣碼</h1>
+        <p id="errorText" class="error"></p>
+        <p class="small">若持續發生，請洽現場工作人員協助。</p>
       </div>
     </div>
   </div>
 
-   <script>
-    // === 設定：統一管理 Web App URL ===
-    const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQN3giIvyIbeS0EIawWVznlqXZ/exec';
+  <script>
+    // 把這裡換成你部署出來的 Web App /exec URL
+    const BASE_URL = 'https://script.google.com/macros/s/AKfycby3eIqWb-B_ifvEYDwDG6eSy3DACTZu6zJGfwFPyBQGN3giIvyIbeS0EIawWVznlqXZ/exec';
 
-    // 產生 / 取得裝置 ID（存在 localStorage）
     function getOrCreateDeviceId() {
       const key = 'whitecoat_device_id_v1';
       try {
@@ -336,100 +97,60 @@
         }
         return id;
       } catch (e) {
+        // 如果 localStorage 不能用，就臨時產生一個
         return 'dev-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
       }
     }
 
-    // ✅ Apps Script 回傳的是 handle({...})，所以這裡要叫 handle
+    // 這個函式會被 Apps Script 用 JSONP 呼叫：handle({...})
     function handle(res) {
       document.getElementById('loading').style.display = 'none';
 
-      if (!res || res.status === 'empty') {
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('errorText').textContent =
-          '折扣碼已全數發放完畢，感謝您的熱情支持。';
+      if (!res) {
+        showError('發生未知錯誤，請稍後再試。');
+        return;
+      }
+
+      if (res.status === 'empty') {
+        showError('折扣碼已全數發放完畢，感謝您的支持。');
         return;
       }
 
       if (res.status === 'error') {
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('errorText').textContent = '系統錯誤：' + res.message;
+        showError(res.message || '系統錯誤，請稍後再試。');
         return;
       }
 
       if (res.status !== 'ok') {
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('errorText').textContent =
-          '系統發生未知錯誤，請稍後再試。';
+        showError('系統發生未知錯誤，請稍後再試。');
         return;
       }
 
-      document.getElementById('result').style.display = 'block';
+      // 成功
       const codeEl = document.getElementById('code');
-      codeEl.textContent = res.code;
+      const statusEl = document.getElementById('statusText');
+      codeEl.textContent = res.code || '--------';
+      statusEl.textContent = res.reused
+        ? ('您先前已領取過折扣碼（第 ' + res.index + ' 位）。')
+        : ('您是第 ' + res.index + ' 位領取折扣碼的朋友！');
 
-      document.getElementById('statusText').textContent =
-        res.reused
-          ? ('您先前已領取過折扣碼，這是您的專屬代碼（第 ' + res.index + ' 位）。')
-          : ('您是第 ' + res.index + ' 位領取折扣碼的朋友！');
-
-      // 複製按鈕邏輯
-      const copyBtn = document.getElementById('copyBtn');
-      const copyText = document.getElementById('copyText');
-
-      copyBtn.onclick = async function () {
-        const code = codeEl.textContent.trim();
-        if (!code || code === '--------') return;
-
-        let success = false;
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(code);
-            success = true;
-          } else {
-            const tempInput = document.createElement('input');
-            tempInput.value = code;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            success = true;
-          }
-        } catch (e) {
-          success = false;
-        }
-
-        if (success) {
-          copyBtn.classList.add('copied');
-          copyText.textContent = '已複製';
-          setTimeout(() => {
-            copyBtn.classList.remove('copied');
-            copyText.textContent = '複製';
-          }, 2000);
-        } else {
-          copyText.textContent = '請手動複製';
-        }
-      };
+      document.getElementById('result').style.display = 'block';
     }
 
-    // 透過 JSONP 向 Apps Script 要折扣碼
+    function showError(msg) {
+      document.getElementById('errorText').textContent = msg;
+      document.getElementById('error').style.display = 'block';
+    }
+
     function requestCode() {
       const deviceId = encodeURIComponent(getOrCreateDeviceId());
-
-      // 🔥 這裡做成跟你測試時一模一樣：
-      // https://script.google.com/macros/s/.../exec?action=claim&deviceId=testFromGithub&callback=handle
       const script = document.createElement('script');
-      script.src =
-        BASE_URL +
-        '?action=claim' +
-        '&deviceId=' + deviceId +
-        '&callback=handle';
+      // 這裡只帶 deviceId 和 callback=handle，後端統一走 claimCode_
+      script.src = BASE_URL + '?deviceId=' + deviceId + '&callback=handle';
 
       script.onerror = function () {
         document.getElementById('loading').style.display = 'none';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('errorText').textContent =
-          '無法連線至伺服器，請稍後再試。';
+        showError('無法連線至伺服器，請稍後再試。');
       };
 
       document.body.appendChild(script);
@@ -439,4 +160,3 @@
   </script>
 </body>
 </html>
-
