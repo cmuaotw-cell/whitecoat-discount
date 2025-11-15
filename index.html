@@ -90,7 +90,7 @@
         <div class="code" id="code"></div>
         <div class="status" id="statusText"></div>
         <div class="note">
-          每台裝置限領一次，請截圖或記下此折扣碼。
+          每台裝置限領一次，請截圖或記下此折扣碼，避免遺失。
         </div>
       </div>
 
@@ -117,7 +117,7 @@
         }
         return id;
       } catch (e) {
-        // 如果 localStorage 被關閉，就每次給新的（後端仍會防止重複）
+        // 如果 localStorage 被關閉，就每次給新的（後端仍只會發一次碼）
         return 'dev-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
       }
     }
@@ -159,7 +159,10 @@
     // 3) 透過 JSONP 向 Apps Script 要折扣碼
     function requestCode() {
       const deviceId = encodeURIComponent(getOrCreateDeviceId());
-      const BASE_URL = 'https://script.google.com/macros/s/AKfycbxfhZna8hVNU9XWHv0pom_aKEIHX6eAc3Gf4qigMPIaPNMupgkoKX4XBaE6kSRKxgfw/exec';
+
+      // 這裡換成你剛剛部署出來的 Web App /exec 網址
+      const BASE_URL = 'https://script.google.com/macros/s/AKfycbzoXvLt2eRMmGe4HdZv3mIESC-XkLa03BkEHXclD83t_Qlm5F2tasPiLdFZ93iiFpT__g/exec'; // 例如：https://script.google.com/macros/s/XXXXX/exec
+
       const joinChar = BASE_URL.includes('?') ? '&' : '?';
 
       const script = document.createElement('script');
@@ -183,4 +186,3 @@
   </script>
 </body>
 </html>
-
